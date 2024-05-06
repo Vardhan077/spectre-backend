@@ -29,7 +29,9 @@ const db = mysql.createConnection({
 
 
 const verifyUser = (req,res,next)=>{
+    
     const token = req.cookies.token;
+    console.log(token,"test1");
     if(!token){
         return res.json({Error: "your are not authenticated"})
     }else{
