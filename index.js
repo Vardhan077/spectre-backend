@@ -54,6 +54,8 @@ app.post('/',verifyUser,(req,res,next)=>{
 
 app.get('/retrieve',async(req,res)=>{
     const email = await (req.query.email);
+        console.log(email,'from retrieve server ')
+
     if (email != "undefined"){
         const sql = "SELECT id,item FROM products WHERE email=?";
         db.query(sql,email,(err,data)=>{
