@@ -123,7 +123,7 @@ app.post("/login",(req,res)=>{
                     const email = data[0].email;
                     const token =  jwt.sign({name,email},"kiri-kiri",{expiresIn:'1d'});
                     res.cookie('token',token);
-                    console.log(token,'is rokeeeeeeeeeeee)
+                    console.log(token,'is rokeeeeeeeeeeee');
                     return res.json({Status:"Success"});
                 }
                 else{
