@@ -60,8 +60,10 @@ app.get('/retrieve',async(req,res)=>{
         const sql = "SELECT id,item FROM products WHERE email=?";
         db.query(sql,email,(err,data)=>{
         if(err) return res.json({Error:"emo ra babu"});
+            console.log(data ,'from retrieve')
         if(data.length>0){
             var sol = JSON.stringify(data)
+            console.log(sol,'frnfekjkfnkkf')
             return res.json(sol)
         }
     })
