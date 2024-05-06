@@ -11,11 +11,13 @@ app.use(express.json());
 app.use(cors({
     origin:['https://shoppingappnew.netlify.app'],
     methods:["POST","GET"],
+    allowedHeaders: ['Content-Type'],
     credentials:true
 }));
 app.use(cors({
     origin:['https://fakestoreapi.com/products/'],
     methods:["POST","GET"],
+    allowedHeaders: ['Content-Type'],
     credentials:false
 }));
 app.use(cookieParser());
