@@ -19,6 +19,14 @@ app.use(cors({
     credentials:false
 }));
 app.use(cookieParser());
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "https://shoppingappnew.netlify.app");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials
+  next();
+});
  
 const db = mysql.createConnection({
     host:'bnkedv2hsautkzdf8dll-mysql.services.clever-cloud.com', 
