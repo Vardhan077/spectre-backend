@@ -30,11 +30,13 @@ const db = mysql.createConnection({
 
 const verifyUser = (req,res,next)=>{
     const token = req.body;
+    console.log(token,'one');
     if(!token){
         return res.json({Error: "your are not authenticated"})
     }else{
         jwt.verify(token,"kiri-kiri",(err,decoded)=>{
             if(err){
+                console.log(err,'two');
                 return res.json({Error: "Token is not okay"});
             }else{
                 req.email = decoded.email;
