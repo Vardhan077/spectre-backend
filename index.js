@@ -9,7 +9,7 @@ const salt = 10;
 const app =  express();
 app.use(express.json());
 app.use(cors({
-    origin:'https://shoppingappnew.netlify.app',
+    origin:'https://newshoppingapp.netlify.app',
     methods:["POST","GET"],
     allowedHeaders: ['Content-Type'],
     credentials:true
@@ -23,7 +23,7 @@ app.use(cors({
 app.use(cookieParser());
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://shoppingappnew.netlify.app");
+  res.header("Access-Control-Allow-Origin", "https://newshoppingapp.netlify.app");
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type");
   res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials
