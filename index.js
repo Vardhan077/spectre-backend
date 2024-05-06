@@ -29,7 +29,8 @@ const db = mysql.createConnection({
 
 
 const verifyUser = (req,res,next)=>{
-    
+    console.log(req)
+    console.log(req.data,"hiiiiiiiiiiii");
     const token = req.cookies.token;
     if(!token){
         return res.json({Error: "your are not authenticated"})
@@ -46,7 +47,7 @@ const verifyUser = (req,res,next)=>{
     }
 }
 app.post('/',verifyUser,(req,res,next)=>{
-    console.log(req.data);
+    
     return res.json({Status: "Success", email:req.email,name:req.name});
     
 })
