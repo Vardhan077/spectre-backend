@@ -13,6 +13,7 @@ app.use(cookieParser());
 const allowedOrigins = [
   'http://localhost:3000',
   'https://newshoppingapp.netlify.app',
+  'https://spectre-backend.onrender.com'
 ];
 
 // Configure CORS middleware
