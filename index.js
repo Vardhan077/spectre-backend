@@ -1,5 +1,5 @@
 import express, { json, response } from "express";
-const cors = require('cors');
+import cors from 'cors'
 import mysql from 'mysql';
 import jwt, { decode} from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
@@ -33,7 +33,7 @@ app.use((rs,next)=>{
     next();
     });
 
-app.use('/', require('./login'))
+
 // app.use(cors({
 //     origin:['https://spectre-backend.onrender.com/login'],
 //     methods:["POST","GET"],
