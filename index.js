@@ -1,5 +1,5 @@
 import express, { json, response } from "express";
-import cors from 'cors';
+const cors = require('cors');
 import mysql from 'mysql';
 import jwt, { decode} from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
@@ -8,45 +8,68 @@ const salt = 10;
 
 const app =  express();
 app.use(express.json());
+
+
+const allowedOrigins = ['http://localhost:3000', 'https://newshoppingapp.netlify.app','https://newshoppingapp.netlify.app'];
+
+// // Configure CORS middleware
 app.use(cors({
-    origin:'https://newshoppingapp.netlify.app',
-    methods:["POST","GET"],
-    allowedHeaders: ['Content-Type'],
-    credentials:true
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
 }));
-app.use(cors({
-    origin:'https://fakestoreapi.com/products/',
-    methods:["POST","GET"],
-    allowedHeaders: ['Content-Type'],
-    credentials:false
-}));
+
+app.use((rs,next)=>{
+    res.setHeader('Access-Control-Allow-Origin', 'https://newshoppingapp.netlify.app');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+    });
+
+app.use('/', require('./login'))
+// app.use(cors({
+//     origin:['https://spectre-backend.onrender.com/login'],
+//     methods:["POST","GET"],
+//     credentials:true
+// }));
+// app.use(cors({
+//     origin:['http://localhost:3000'],
+//     methods:["POST","GET"],
+//     credentials:true
+// }));
+// app.use(cors({
+//     origin:['https://fakestoreapi.com/products/'],
+//     methods:["POST","GET"],
+//     credentials:false
+// }));
 app.use(cookieParser());
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "https://newshoppingapp.netlify.app");
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials
-  next();
-});
  
 const db = mysql.createConnection({
     host:'bnkedv2hsautkzdf8dll-mysql.services.clever-cloud.com', 
     user:'ukjj9c1guwwx5mup',
     password: 'ggJ2apbka4fbokvw0x84',
-    database:'bnkedv2hsautkzdf8dll'
+    database:'bnkedv2hsautkzdf8dll',host: 'localhost',
+    waitForConnections: true,
+    connectionLimit: 10, 
+    queueLimit: 0
 })
 
 
 const verifyUser = (req,res,next)=>{
-    const token = req.body.token;
-    console.log(token,'one');
+    const token = req.cookies.token;
     if(!token){
         return res.json({Error: "your are not authenticated"})
     }else{
         jwt.verify(token,"kiri-kiri",(err,decoded)=>{
             if(err){
-                console.log(err,'two');
                 return res.json({Error: "Token is not okay"});
             }else{
                 req.email = decoded.email;
@@ -56,24 +79,19 @@ const verifyUser = (req,res,next)=>{
         })
     }
 }
-app.post('/',verifyUser,(req,res,next)=>{
-    
+app.get('/',verifyUser,(req,res,next)=>{
     return res.json({Status: "Success", email:req.email,name:req.name});
     
 })
 
 app.get('/retrieve',async(req,res)=>{
     const email = await (req.query.email);
-        console.log(email,'from retrieve server ')
-
     if (email != "undefined"){
         const sql = "SELECT id,item FROM products WHERE email=?";
         db.query(sql,email,(err,data)=>{
         if(err) return res.json({Error:"emo ra babu"});
-            console.log(data ,'from retrieve')
         if(data.length>0){
             var sol = JSON.stringify(data)
-            console.log(sol,'frnfekjkfnkkf')
             return res.json(sol)
         }
     })
@@ -140,7 +158,7 @@ app.post("/login",(req,res)=>{
                     const email = data[0].email;
                     const token =  jwt.sign({name,email},"kiri-kiri",{expiresIn:'1d'});
                     res.cookie('token',token);
-                    return res.json({Status:"Success",jwtToken:token});
+                    return res.json({Status:"Success"});
                 }
                 else{
                     return res.json({Error:"Password not matched"});
